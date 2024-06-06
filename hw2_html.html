@@ -8,61 +8,37 @@
 </head>
 <body>
     <div class="container-main">
-    <div class="container-1">
-        <div class="left-column">
-            <div class="input-group">
-                <input type="text" placeholder="Назва товару" id="product-name">
-                <button id="add-button" data-tooltip="Додати товар">Додати</button>
-            </div>
-            <div class="item">
-                <span class="item-name bought"><strike>Помідори</strike></span>
-                <span class="tomato-quantity">2</span>
-                <div class="item-actions">
-                    <button class="bought-button" data-tooltip="Змінити статус">Не куплено</button>
+        <div class="container-1">
+            <div class="left-column">
+                <div class="input-group">
+                    <input type="text" placeholder="Назва товару" id="product-name">
+                    <button id="add-button" data-tooltip="Додати товар">Додати</button>
+                </div>
+                <div class="items-list">
+                    <!-- Items will be dynamically added here -->
                 </div>
             </div>
-            <div class="item">
-                <span class="item-name">Печиво</span>
-                <div class="quantity-controls">
-                    <button class="minus-button" data-tooltip="Зменшити кількість">-</button>
-                    <span class="item-quantity">2</span>
-                    <button class="plus-button" data-tooltip="Збільшити кількість">+</button>
+        </div>
+        <div class="container-2">
+            <div class="right-column">
+                <div class="section">
+                    <h2>Залишилося</h2>
+                    <div class="remaining-items">
+                        <!-- Remaining items will be dynamically added here -->
+                    </div>
                 </div>
-                <div class="item-actions">
-                    <button class="bought-button" data-tooltip="Змінити статус">Куплено</button>
-                    <button class="delete-button" data-tooltip="Видалити товар">x</button>
-                </div>
-            </div>
-            <div class="item">
-                <input type="text" value="Сир" class="item-name item-cheese">
-                <div class="quantity-controls">
-                    <button class="minus-button" data-tooltip="Зменшити кількість">-</button>
-                    <span class="item-quantity">1</span>
-                    <button class="plus-button" data-tooltip="Збільшити кількість">+</button>
-                </div>
-                <div class="item-actions">
-                    <button class="bought-button" data-tooltip="Змінити статус">Куплено</button>
-                    <button class="delete-button" data-tooltip="Видалити товар">x</button>
+                <div class="section">
+                    <h2>Куплено</h2>
+                    <div class="bought-items">
+                        <!-- Bought items will be dynamically added here -->
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container-2">
-        <div class="right-column">
-            <div class="section">
-                <h2>Залишилося</h2>
-                <div class="badge">Печиво <span class="badge-count">2</span></div>
-                <div class="badge">Сир <span class="badge-count">1</span></div>
-            </div>
-            <div class="section">
-                <h2>Куплено</h2>
-                <div class="badge"><strike>Помідори</strike> <span class="badge-count"><strike>2</strike></span></div>
-            </div>
-        </div>
-    </div>
-</div>
     <div class="badg" id="creator-badge">
         <span id="badge_title">Buy list</span>
     </div>
+    <script src="hw3_script.js"></script>
 </body>
 </html>
