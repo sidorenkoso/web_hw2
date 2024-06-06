@@ -1,0 +1,176 @@
+document.addEventListener("DOMContentLoaded", () => {
+    const addButton = document.getElementById("add-button");
+    const productNameInput = document.getElementById("product-name");
+    const itemsList = document.querySelector(".items-list");
+    const remainingItems = document.querySelector(".remaining-items");
+    const boughtItems = document.querySelector(".bought-items");
+
+    const initialItems = [
+        { name: "Помідори", quantity: 2, bought: true },
+        { name: "Печиво", quantity: 2, bought: false },
+        { name: "Сир", quantity: 1, bought: false }
+    ];
+
+    initialItems.forEach(item => addItem(item.name, item.quantity, item.bought));
+
+    function addItem(name, quantity = 1, bought = false) {
+        const itemDiv = document.createElement("div");
+        itemDiv.className = "item";
+
+        const itemName = document.createElement("span");
+        itemName.textContent = name;
+        itemName.className = bought ? "item-name bought" : "item-name";
+        itemDiv.appendChild(itemName);
+
+        if (!bought) {
+            itemName.addEventListener("click", () => {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.value = itemName.textContent;
+                input.className = "item-name-input";
+
+                input.addEventListener("blur", () => {
+                    itemName.textContent = input.value;
+                    itemDiv.replaceChild(itemName, input);
+                    updateStatistics();
+                });
+
+                itemDiv.replaceChild(input, itemName);
+                input.focus();
+            });
+        }
+
+        const quantityControls = document.createElement("div");
+        quantityControls.className = "quantity-controls";
+        itemDiv.appendChild(quantityControls);
+
+        const minusButton = document.createElement("button");
+        minusButton.className = "minus-button";
+        minusButton.textContent = "-";
+        minusButton.disabled = quantity === 1;
+        minusButton.dataset.tooltip = "Зменшити кількість";
+        quantityControls.appendChild(minusButton);
+
+        const quantitySpan = document.createElement("span");
+        quantitySpan.className = "item-quantity";
+        quantitySpan.textContent = quantity;
+        quantityControls.appendChild(quantitySpan);
+
+        const plusButton = document.createElement("button");
+        plusButton.className = "plus-button";
+        plusButton.textContent = "+";
+        plusButton.dataset.tooltip = "Збільшити кількість";
+        quantityControls.appendChild(plusButton);
+
+        minusButton.addEventListener("click", () => {
+            if (quantity > 1) {
+                quantity--;
+                quantitySpan.textContent = quantity;
+                minusButton.disabled = quantity === 1;
+                updateStatistics();
+            }
+        });
+
+        plusButton.addEventListener("click", () => {
+            quantity++;
+            quantitySpan.textContent = quantity;
+            minusButton.disabled = false;
+            updateStatistics();
+        });
+
+        const itemActions = document.createElement("div");
+        itemActions.className = "item-actions";
+        itemDiv.appendChild(itemActions);
+
+        const boughtButton = document.createElement("button");
+        boughtButton.className = "bought-button";
+        boughtButton.textContent = bought ? "Не куплено" : "Куплено";
+        boughtButton.dataset.tooltip = "Змінити статус";
+        itemActions.appendChild(boughtButton);
+
+        const deleteButton = document.createElement("button");
+        deleteButton.className = "delete-button";
+        deleteButton.textContent = "x";
+        deleteButton.dataset.tooltip = "Видалити товар";
+        if (bought) deleteButton.style.display = "none";
+        itemActions.appendChild(deleteButton);
+
+        boughtButton.addEventListener("click", () => {
+            bought = !bought;
+            itemName.className = bought ? "item-name bought" : "item-name";
+            boughtButton.textContent = bought ? "Не куплено" : "Куплено";
+            quantityControls.style.display = bought ? "none" : "flex";
+            deleteButton.style.display = bought ? "none" : "inline-block";
+            if (!bought) {
+                itemName.addEventListener("click", () => {
+                    const input = document.createElement("input");
+                    input.type = "text";
+                    input.value = itemName.textContent;
+                    input.className = "item-name-input";
+
+                    input.addEventListener("blur", () => {
+                        itemName.textContent = input.value;
+                        itemDiv.replaceChild(itemName, input);
+                        updateStatistics();
+                    });
+
+                    itemDiv.replaceChild(input, itemName);
+                    input.focus();
+                });
+            } else {
+                itemName.removeEventListener("click", () => {});
+            }
+            updateStatistics();
+        });
+
+        deleteButton.addEventListener("click", () => {
+            itemsList.removeChild(itemDiv);
+            updateStatistics();
+        });
+
+        itemsList.appendChild(itemDiv);
+        productNameInput.value = "";
+        productNameInput.focus();
+        updateStatistics();
+    }
+
+    function updateStatistics() {
+        remainingItems.innerHTML = "";
+        boughtItems.innerHTML = "";
+
+        const items = itemsList.querySelectorAll(".item");
+        items.forEach(item => {
+            const name = item.querySelector(".item-name").textContent;
+            const quantity = item.querySelector(".item-quantity").textContent;
+            const bought = item.querySelector(".item-name").classList.contains("bought");
+
+            const badge = document.createElement("div");
+            badge.className = "badge";
+            if (bought) badge.classList.add("bought");
+            badge.innerHTML = `${bought ? `<strike>${name}</strike>` : name} <span class="badge-count">${bought ? `<strike>${quantity}</strike>` : quantity}</span>`;
+
+            if (bought) {
+                boughtItems.appendChild(badge);
+            } else {
+                remainingItems.appendChild(badge);
+            }
+        });
+    }
+
+    addButton.addEventListener("click", () => {
+        const productName = productNameInput.value.trim();
+        if (productName) {
+            addItem(productName);
+        }
+    });
+
+    productNameInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            const productName = productNameInput.value.trim();
+            if (productName) {
+                addItem(productName);
+            }
+        }
+    });
+
+});

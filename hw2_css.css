@@ -105,6 +105,11 @@ body {
     padding: 5px;
 }
 
+.item-name.bought {
+    margin-right: 10px;
+    text-decoration: line-through;
+}
+
 .item-cheese {
     border: 1px solid #2a9ae4;
     border-radius: 4px;
