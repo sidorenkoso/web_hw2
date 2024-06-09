@@ -14,9 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     DefaultItems.forEach(item => addItem(item.name, item.quantity, item.bought));
 
     function addItem(name, quantity = 1, bought = false) {
-        // Check for duplicate names
         if (isDuplicateName(name)) {
-            alert("Item with this name already exists.");
             return;
         }
 
@@ -41,13 +39,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (newName === "") {
                         itemName.textContent = originalName;
                     } else if (newName !== originalName && isDuplicateName(newName)) {
-                        alert("Item with this name already exists.");
                         itemName.textContent = originalName;
                     } else {
                         itemName.textContent = newName;
                     }
                     itemDiv.replaceChild(itemName, input);
-                    updateStatistics();
+                    update();
                 });
 
                 itemDiv.replaceChild(input, itemName);
@@ -82,7 +79,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 quantity--;
                 quantitySpan.textContent = quantity;
                 minusButton.disabled = quantity === 1;
-                updateStatistics();
+                update();
             }
         });
 
@@ -90,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
             quantity++;
             quantitySpan.textContent = quantity;
             minusButton.disabled = false;
-            updateStatistics();
+            update();
         });
 
         const itemActions = document.createElement("div");
@@ -141,25 +138,25 @@ document.addEventListener("DOMContentLoaded", () => {
                             itemName.textContent = newName;
                         }
                         itemDiv.replaceChild(itemName, input);
-                        updateStatistics();
+                        update();
                     });
 
                     itemDiv.replaceChild(input, itemName);
                     input.focus();
                 });
             }
-            updateStatistics();
+            update();
         });
 
         deleteButton.addEventListener("click", () => {
             itemsList.removeChild(itemDiv);
-            updateStatistics();
+            update();
         });
 
         itemsList.appendChild(itemDiv);
         productNameInput.value = "";
         productNameInput.focus();
-        updateStatistics();
+        update();
     }
 
     function isDuplicateName(name) {
@@ -172,7 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return false;
     }
 
-    function updateStatistics() {
+    function update() {
         remainingItems.innerHTML = "";
         boughtItems.innerHTML = "";
 
