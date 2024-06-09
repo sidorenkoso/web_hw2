@@ -151,6 +151,17 @@ body {
     font-weight: bold;
 }
 
+.plus-button, .minus-button {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 30px; /* Це вирівнює текст по вертикалі по центру */
+    display: inline-flex; /* Використання inline-flex для кращого вирівнювання */
+    justify-content: center; /* Вирівнювання по горизонталі */
+    align-items: center; /* Вирівнювання по вертикалі */
+}
+
 .quantity-controls .minus-button {
     background-color: #dc3545;
     box-shadow: 2px 2px 5px rgb(221, 46, 46);

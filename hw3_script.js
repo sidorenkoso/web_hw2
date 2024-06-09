@@ -5,15 +5,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const remainingItems = document.querySelector(".remaining-items");
     const boughtItems = document.querySelector(".bought-items");
 
-    const initialItems = [
+    const DefaultItems = [
         { name: "Помідори", quantity: 2, bought: true },
         { name: "Печиво", quantity: 2, bought: false },
         { name: "Сир", quantity: 1, bought: false }
     ];
 
-    initialItems.forEach(item => addItem(item.name, item.quantity, item.bought));
+    DefaultItems.forEach(item => addItem(item.name, item.quantity, item.bought));
 
     function addItem(name, quantity = 1, bought = false) {
+        // Check for duplicate names
+        if (isDuplicateName(name)) {
+            alert("Item with this name already exists.");
+            return;
+        }
+
         const itemDiv = document.createElement("div");
         itemDiv.className = "item";
 
@@ -24,13 +30,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!bought) {
             itemName.addEventListener("click", () => {
+                const originalName = itemName.textContent;
                 const input = document.createElement("input");
                 input.type = "text";
                 input.value = itemName.textContent;
                 input.className = "item-name-input";
 
                 input.addEventListener("blur", () => {
-                    itemName.textContent = input.value;
+                    const newName = input.value.trim();
+                    if (newName === "") {
+                        itemName.textContent = originalName;
+                    } else if (newName !== originalName && isDuplicateName(newName)) {
+                        alert("Item with this name already exists.");
+                        itemName.textContent = originalName;
+                    } else {
+                        itemName.textContent = newName;
+                    }
                     itemDiv.replaceChild(itemName, input);
                     updateStatistics();
                 });
@@ -99,17 +114,32 @@ document.addEventListener("DOMContentLoaded", () => {
             bought = !bought;
             itemName.className = bought ? "item-name bought" : "item-name";
             boughtButton.textContent = bought ? "Не куплено" : "Куплено";
-            quantityControls.style.display = bought ? "none" : "flex";
+            plusButton.style.display = bought ? "none" : "flex";
+            minusButton.style.display = bought ? "none" : "flex";
             deleteButton.style.display = bought ? "none" : "inline-block";
-            if (!bought) {
+            quantitySpan.style.display = 'visible';
+
+            // Remove the click listener for editing the name if bought
+            if (bought) {
+                itemName.replaceWith(itemName.cloneNode(true));
+            } else {
                 itemName.addEventListener("click", () => {
+                    const originalName = itemName.textContent;
                     const input = document.createElement("input");
                     input.type = "text";
                     input.value = itemName.textContent;
                     input.className = "item-name-input";
 
                     input.addEventListener("blur", () => {
-                        itemName.textContent = input.value;
+                        const newName = input.value.trim();
+                        if (newName === "") {
+                            itemName.textContent = originalName;
+                        } else if (newName !== originalName && isDuplicateName(newName)) {
+                            alert("Item with this name already exists.");
+                            itemName.textContent = originalName;
+                        } else {
+                            itemName.textContent = newName;
+                        }
                         itemDiv.replaceChild(itemName, input);
                         updateStatistics();
                     });
@@ -117,8 +147,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     itemDiv.replaceChild(input, itemName);
                     input.focus();
                 });
-            } else {
-                itemName.removeEventListener("click", () => {});
             }
             updateStatistics();
         });
@@ -132,6 +160,16 @@ document.addEventListener("DOMContentLoaded", () => {
         productNameInput.value = "";
         productNameInput.focus();
         updateStatistics();
+    }
+
+    function isDuplicateName(name) {
+        const items = itemsList.querySelectorAll(".item-name");
+        for (const item of items) {
+            if (item.textContent.trim().toLowerCase() === name.trim().toLowerCase()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     function updateStatistics() {
@@ -172,5 +210,4 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
     });
-
 });
